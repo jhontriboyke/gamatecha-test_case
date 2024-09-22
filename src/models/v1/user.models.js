@@ -18,11 +18,15 @@ module.exports = {
   },
 
   findById: async (id) => {
-    return await db.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    try {
+      return await db.user.findUnique({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   },
 
   findByUsername: async (username) => {
@@ -38,48 +42,64 @@ module.exports = {
   },
 
   getAllManager: async () => {
-    return await db.user.findMany({
-      where: {
-        role: Role.Manager,
-      },
-      select: {
-        id: true,
-        username: true,
-        fullName: true,
-        role: true,
-        cafes: {
-          select: {
-            id: true,
-            name: true,
+    try {
+      return await db.user.findMany({
+        where: {
+          role: Role.Manager,
+        },
+        select: {
+          id: true,
+          username: true,
+          fullName: true,
+          role: true,
+          cafes: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      throw error;
+    }
   },
 
   getManagerById: async (id) => {
-    return await db.user.findUnique({
-      where: {
-        role: Role.Manager,
-        id: id,
-      },
-    });
+    try {
+      return await db.user.findUnique({
+        where: {
+          role: Role.Manager,
+          id: id,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   },
 
   updateUser: async (id, userObj) => {
-    return await db.user.update({
-      where: {
-        id,
-      },
-      data: { ...userObj },
-    });
+    try {
+      return await db.user.update({
+        where: {
+          id,
+        },
+        data: { ...userObj },
+      });
+    } catch (error) {
+      throw error;
+    }
   },
 
   deleteUser: async (id) => {
-    return await db.user.delete({
-      where: {
-        id,
-      },
-    });
+    try {
+      return await db.user.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   },
 };

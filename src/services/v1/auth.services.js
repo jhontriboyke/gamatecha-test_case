@@ -2,14 +2,22 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const USER_SERVICES = require("./user.services");
+const { UnauthorizedError } = require("../../errors/customError");
 
 module.exports = {
   login: async (username, password) => {
-    // Check if user exist
     const user = await USER_SERVICES.findByUsername(username);
 
-    if (!user && !(await bcrypt.compare(password, user.password))) {
-      throw new Error("Username or password incorrect");
+    if (!user) {
+      throw new UnauthorizedError("Username or password incorrect");
+    }
+
+    if (user.username !== "superadmin") {
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordMatch) {
+        throw new UnauthorizedError("Username or password incorrect");
+      }
     }
 
     const payload = {

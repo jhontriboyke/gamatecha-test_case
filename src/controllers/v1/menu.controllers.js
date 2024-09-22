@@ -1,9 +1,10 @@
 const { Role } = require("@prisma/client");
+const { UnauthorizedError } = require("../../errors/customError.js");
 const { MENU_SERVICES, CAFE_SERVICES } =
   require("../../services/index.js").V1_SERVICES;
 
 module.exports = {
-  createMenu: async (req, res) => {
+  createMenu: async (req, res, next) => {
     const { role, sub } = req.user;
     const { name, price, isRecommendation, cafeId } = req.body;
 
@@ -12,7 +13,7 @@ module.exports = {
       if (role === Role.Manager) {
         const isManagerValid = await CAFE_SERVICES.isWorkHere(sub, cafeId);
         if (!isManagerValid) {
-          throw new Error("Manager not valid");
+          throw new UnauthorizedError("Manager not valid");
         }
       }
 
@@ -23,61 +24,37 @@ module.exports = {
         cafeId
       );
 
-      res.status(201).json({
-        message: "menu created",
-        statusCode: 201,
-        data: menu,
-      });
+      res.success(201, "menu created", menu);
     } catch (error) {
-      res.status(500).json({
-        message: "Something went wrong",
-        statusCode: 500,
-        error: error.message,
-      });
+      next(error);
     }
   },
 
-  getAllMenu: async (req, res) => {
+  getAllMenu: async (req, res, next) => {
     try {
       const cafeId = req.params.cafeId;
 
       const menus = await MENU_SERVICES.getAllMenuFromCafe(cafeId);
 
-      res.status(200).json({
-        message: "menu found",
-        statusCode: 200,
-        data: menus,
-      });
+      res.success(200, "all menu found", menus);
     } catch (error) {
-      res.status(500).json({
-        message: "Something went wrong",
-        statusCode: 500,
-        error: error.message,
-      });
+      next(error);
     }
   },
 
-  getMenuById: async (req, res) => {
+  getMenuById: async (req, res, next) => {
     try {
       const menuId = req.params.menuId;
 
       const menu = await MENU_SERVICES.getMenuById(menuId);
 
-      res.status(200).json({
-        message: "menu found",
-        statusCode: 200,
-        data: menu,
-      });
+      res.success(200, "menu found", menu);
     } catch (error) {
-      res.status(500).json({
-        message: "Something went wrong",
-        statusCode: 500,
-        error: error.message,
-      });
+      next(error);
     }
   },
 
-  updateMenu: async (req, res) => {
+  updateMenu: async (req, res, next) => {
     try {
       const menuId = req.params.menuId;
       const { name, price, isRecommendation } = req.body;
@@ -88,37 +65,21 @@ module.exports = {
         isRecommendation,
       });
 
-      res.status(200).json({
-        message: "update menu success",
-        statusCode: 200,
-        data: updatedMenu,
-      });
+      res.success(200, "menu updated", updatedMenu);
     } catch (error) {
-      res.status(500).json({
-        message: "Something went wrong",
-        statusCode: 500,
-        error: error.message,
-      });
+      next(error);
     }
   },
 
-  deleteMenu: async (req, res) => {
+  deleteMenu: async (req, res, next) => {
     try {
       const menuId = req.params.menuId;
 
       const deletedMenu = await MENU_SERVICES.deleteMenu(menuId);
 
-      res.status(200).json({
-        message: "delete menu success",
-        statusCode: 200,
-        data: deletedMenu,
-      });
+      res.success(200, "menu deleted", deletedMenu);
     } catch (error) {
-      res.status(500).json({
-        message: "Something went wrong",
-        statusCode: 500,
-        error: error.message,
-      });
+      next(error);
     }
   },
 };

@@ -4,6 +4,9 @@ const checkRole = require("../../middlewares/checkRole.middleware.js");
 const authenticateToken = require("../../middlewares/auth.middleware.js");
 const { CAFE_CONTROLLERS } =
   require("../../controllers/index.js").V1_CONTROLLERS;
+const {
+  validateNewCafe,
+} = require("../../middlewares/validations/cafe-validation.middleware");
 
 /**
  * @swagger
@@ -433,13 +436,14 @@ router.post(
   "",
   authenticateToken,
   checkRole([Role.SuperAdmin, Role.Owner]),
+  validateNewCafe,
   CAFE_CONTROLLERS.createCafe
 );
 
 // edit / update cafe by id
 // Only user with role SuperAdmin and Owner can access this
 router.put(
-  "/:cafeId", // corrected path here
+  "/:cafeId",
   authenticateToken,
   checkRole([Role.SuperAdmin, Role.Owner]),
   CAFE_CONTROLLERS.updateCafe
@@ -448,7 +452,7 @@ router.put(
 // delete cafe by id
 // Only user with role SuperAdmin and Owner can access this
 router.delete(
-  "/:cafeId", // corrected path here
+  "/:cafeId",
   authenticateToken,
   checkRole([Role.SuperAdmin, Role.Owner]),
   CAFE_CONTROLLERS.deleteCafe

@@ -1,7 +1,22 @@
+const {
+  DuplicationError,
+  NotFoundError,
+} = require("../../errors/customError.js");
+
 const { CAFE_MODELS } = require("../../models/index.js").V1_MODELS;
 
 class CAFE_SERVICES {
+  async getCafeByName(name) {
+    return await CAFE_MODELS.getCafeByName(name);
+  }
+
   async createCafe(name, address, phoneNumber, managerId) {
+    const isCafeExist = await this.getCafeByName(name);
+
+    if (isCafeExist) {
+      throw new DuplicationError("Cafe already exist");
+    }
+
     try {
       const cafe = await CAFE_MODELS.createCafe(
         name,
@@ -9,6 +24,7 @@ class CAFE_SERVICES {
         phoneNumber,
         managerId
       );
+
       return cafe;
     } catch (error) {
       throw error;
@@ -17,7 +33,13 @@ class CAFE_SERVICES {
 
   async getAllCafe() {
     try {
-      return await CAFE_MODELS.getAllCafe();
+      const cafes = await CAFE_MODELS.getAllCafe();
+
+      if (cafes.length === 0) {
+        throw new NotFoundError("Cafe not found");
+      }
+
+      return cafes;
     } catch (error) {
       throw error;
     }
@@ -25,7 +47,13 @@ class CAFE_SERVICES {
 
   async getCafe(cafeId) {
     try {
-      return await CAFE_MODELS.getCafe(cafeId);
+      const cafe = await CAFE_MODELS.getCafe(cafeId);
+
+      if (!cafe) {
+        throw new NotFoundError("Cafe not found");
+      }
+
+      return cafe;
     } catch (error) {
       throw error;
     }
@@ -33,6 +61,8 @@ class CAFE_SERVICES {
 
   async updateCafe(cafeId, cafeObj) {
     try {
+      await this.getCafe(cafeId);
+
       return await CAFE_MODELS.updateCafe(cafeId, cafeObj);
     } catch (error) {
       throw error;
@@ -41,6 +71,8 @@ class CAFE_SERVICES {
 
   async deleteCafe(cafeId) {
     try {
+      await this.getCafe(cafeId);
+
       return await CAFE_MODELS.deleteCafe(cafeId);
     } catch (error) {
       throw error;

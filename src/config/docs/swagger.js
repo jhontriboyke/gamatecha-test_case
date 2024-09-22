@@ -5,13 +5,13 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "REST API Documentation",
+      title: "Gamatecha Test Case - Build Cafetaria REST API",
       version: "1.0.0",
       description: "API documentation for your Express application",
     },
     servers: [
       {
-        url: "http://localhost:8001", // URL base server Anda
+        url: "http://localhost:8001/api/v1",
       },
     ],
   },

@@ -1,6 +1,6 @@
 const { USER_MODELS } = require("../../models/index").V1_MODELS;
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const { DuplicationError, NotFoundError } = require("../../errors/customError");
 require("dotenv").config();
 
 class USER_SERVICES {
@@ -16,7 +16,7 @@ class USER_SERVICES {
     const user = await this.findByUsername(username);
 
     if (user) {
-      throw new Error("User already exist");
+      throw new DuplicationError("User already exist");
     }
 
     try {
@@ -42,7 +42,7 @@ class USER_SERVICES {
     const user = await this.findById(userId);
 
     if (!user) {
-      throw Error("User not found");
+      throw NotFoundError("User not found");
     }
 
     try {
@@ -65,7 +65,7 @@ class USER_SERVICES {
     const user = await this.findById(userId);
 
     if (!user) {
-      throw Error("User not found");
+      throw NotFoundError("User not found");
     }
 
     try {

@@ -2,7 +2,7 @@ const { USER_SERVICES } = require("../../services").V1_SERVICES;
 
 module.exports = {
   createUser: (role) => {
-    return async (req, res) => {
+    return async (req, res, next) => {
       try {
         const { username, fullName, password } = req.body;
 
@@ -13,24 +13,14 @@ module.exports = {
           role
         );
 
-        res.status(201).json({
-          message: "user created",
-          statusCode: 201,
-          data: {
-            user,
-          },
-        });
+        res.success(201, "user created", user);
       } catch (error) {
-        res.status(500).json({
-          message: "Something went wrong",
-          statusCode: 500,
-          error: error.message,
-        });
+        next(error);
       }
     };
   },
 
-  updateUser: async (req, res) => {
+  updateUser: async (req, res, next) => {
     const userId = req.params.userId;
     const { username, fullName, password } = req.body;
 
@@ -41,74 +31,44 @@ module.exports = {
         fullName,
         password
       );
-      res.status(200).json({
-        message: "user updated",
-        statusCode: 200,
-        data: updatedUser,
-      });
+
+      res.success(200, "user updated", updatedUser);
     } catch (error) {
-      res.status(500).json({
-        message: "Something went wrong",
-        statusCode: 500,
-        error: error.message,
-      });
+      next(error);
     }
   },
 
-  deleteUser: async (req, res) => {
+  deleteUser: async (req, res, next) => {
     const userId = req.params.userId;
 
     try {
       const deletedUser = await USER_SERVICES.deleteUser(userId);
 
-      res.status(200).json({
-        message: "user deleted",
-        statusCode: 200,
-        data: deletedUser,
-      });
+      res.success(200, "user deleted", deletedUser);
     } catch (error) {
-      res.status(500).json({
-        message: "Something went wrong",
-        statusCode: 500,
-        error: error.message,
-      });
+      next(error);
     }
   },
 
-  getAllManager: async (req, res) => {
+  getAllManager: async (req, res, next) => {
     try {
       const managers = await USER_SERVICES.getAllManager();
 
-      res.status(200).json({
-        message: "get all manager success",
-        statusCode: 200,
-        data: managers,
-      });
+      res.success(200, "all managers found", managers);
     } catch (error) {
-      res.status(500).json({
-        message: "Something went wrong",
-        statusCode: 500,
-        error: error.message,
-      });
+      next(error);
     }
   },
 
-  getManagerById: async (req, res) => {
+  getManagerById: async (req, res, next) => {
     try {
       const { id } = req.params;
 
       const manager = await USER_SERVICES.getManagerById(id);
-      res.status(200).json({
-        message: "get all manager success",
-        statusCode: 200,
-        data: manager,
-      });
+
+      res.success(200, "manager found", manager);
     } catch (error) {
-      res.status(500).json({
-        message: "Something went wrong",
-        statusCode: 500,
-        error: error.message,
-      });
+      next(error);
     }
   },
 };

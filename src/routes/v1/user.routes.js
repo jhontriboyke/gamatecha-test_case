@@ -4,6 +4,10 @@ const checkRole = require("../../middlewares/checkRole.middleware.js");
 const authenticateToken = require("../../middlewares/auth.middleware.js");
 const { USER_CONTROLLERS } =
   require("../../controllers/index.js").V1_CONTROLLERS;
+const {
+  validateNewUser,
+  validateUpdateUser,
+} = require("../../middlewares/validations/user-validation.middleware.js");
 
 /**
  * @swagger
@@ -351,6 +355,7 @@ router.post(
   "/manager",
   authenticateToken,
   checkRole([Role.SuperAdmin, Role.Owner]),
+  validateNewUser,
   USER_CONTROLLERS.createUser(Role.Manager)
 );
 
@@ -359,6 +364,7 @@ router.post(
   "/owner",
   authenticateToken,
   checkRole([Role.SuperAdmin]),
+  validateNewUser,
   USER_CONTROLLERS.createUser(Role.Owner)
 );
 
@@ -367,14 +373,16 @@ router.patch(
   "/manager/:userId",
   authenticateToken,
   checkRole([Role.SuperAdmin, Role.Owner, Role.Manager]),
+  validateUpdateUser,
   USER_CONTROLLERS.updateUser
 );
 
 // Update owner
-router.put(
+router.patch(
   "/owner/:userId",
   authenticateToken,
   checkRole([Role.SuperAdmin, Role.Owner]),
+  validateUpdateUser,
   USER_CONTROLLERS.updateUser
 );
 
