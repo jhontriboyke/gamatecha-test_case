@@ -7,7 +7,8 @@ const options = {
     info: {
       title: "Gamatecha Test Case - Build Cafetaria REST API",
       version: "1.0.0",
-      description: "API documentation for your Express application",
+      description:
+        "This API provides endpoints to manage the Cafetaria system, allowing users to perform operations such as creating, retrieving, updating, and deleting menu items and user accounts. It is built on Express and adheres to RESTful principles.",
     },
     servers: [
       {

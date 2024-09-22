@@ -85,7 +85,13 @@ class USER_SERVICES {
 
   async getManagerById(id) {
     try {
-      return await USER_MODELS.getManagerById(id);
+      const manager = await USER_MODELS.getManagerById(id);
+
+      if (!manager) {
+        throw new NotFoundError("Manager not found");
+      }
+
+      return manager;
     } catch (error) {
       throw error;
     }

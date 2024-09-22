@@ -17,28 +17,6 @@ const {
 
 /**
  * @swagger
- * components:
- *   schemas:
- *     Cafe:
- *       type: object
- *       properties:
- *         name:
- *           type: string
- *           description: The name of the cafe
- *         address:
- *           type: string
- *           description: The address of the cafe
- *         phoneNumber:
- *           type: string
- *           description: The phone number of the cafe
- *       example:
- *         name: "Cafe Gamatecha"
- *         address: "Malang, Jawa Timur"
- *         phoneNumber: "+62123123123"
- */
-
-/**
- * @swagger
  * /cafe:
  *   get:
  *     summary: Get all cafes
